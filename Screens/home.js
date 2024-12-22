@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Keyboard } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { globalstyle } from '../style/gStyle';
 import Card from '../shared/card';
 import Form from './form';
+import { TouchableWithoutFeedback } from 'react-native-web';
 
 export default function Home({ navigation }) {
   const [modalopen, setModalopen] = useState(false);
@@ -13,9 +14,18 @@ export default function Home({ navigation }) {
     { title: 'C', rating: '3', body: 'Sample review C', key: '3' },
   ]);
 
+  const addReview = (review)=>{
+    reviews.key = Math.random().toString();
+    setReviews((currReviews)=>{
+      return [review,...currReviews]
+    });
+    setModalopen(false);
+  }
+
   return (
     <View style={globalstyle.body}>
       <Modal visible={modalopen} animationType="slide" transparent={true}>
+        <TouchableWithoutFeedback >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
@@ -27,9 +37,10 @@ export default function Home({ navigation }) {
                 style={styles.icon}
               />
             </View>
-            <Form />
+            <Form addReview={addReview}/>
           </View>
         </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <View style={styles.iconContainer}>
         <MaterialIcons
